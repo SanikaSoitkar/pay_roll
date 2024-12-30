@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
+// Abstract Employee class
 abstract class Employee {
     private String name;
     private int id;
@@ -25,13 +27,12 @@ abstract class Employee {
 
     // Overriding toString method to provide employee details
     @Override
-
     public String toString() {
-
-        return "Employee[name=" + name + ",  id=" + id + ", salary=" + calculateSalary() + "]";
+        return "Employee[name=" + name + ", id=" + id + ", salary=" + calculateSalary() + "]";
     }
 }
 
+// Fulltime employee class
 class Fulltime extends Employee {
     private double monthlySalary;
 
@@ -46,6 +47,7 @@ class Fulltime extends Employee {
     }
 }
 
+// PartTime employee class
 class PartTime extends Employee {
     private int hoursWorked;
     private double hourlyRate;
@@ -62,20 +64,23 @@ class PartTime extends Employee {
     }
 }
 
+// PayrollSystem class
 class PayrollSystem {
-    private ArrayList<Employee> employeeList; //daynamiclist when it comes to full that time it create new arrya list
+    private ArrayList<Employee> employeeList;
 
     public PayrollSystem() {
-        employeeList = new ArrayList<>(); //arrya list
+        employeeList = new ArrayList<>();
     }
 
-    public void addEmployee(Employee employee) { //add methode is use it is already contain in the arrya list
+    // Method to add an employee
+    public void addEmployee(Employee employee) {
         employeeList.add(employee);
     }
 
-    public void removeEmployee(int id) { //it is find out where employee is here.
-        Employee employeeToRemove = null; //variable it assign null value
-        for (Employee employee : employeeList) {  //
+    // Method to remove an employee by ID
+    public void removeEmployee(int id) {
+        Employee employeeToRemove = null;
+        for (Employee employee : employeeList) {
             if (employee.getId() == id) {
                 employeeToRemove = employee;
                 break;
@@ -83,31 +88,84 @@ class PayrollSystem {
         }
         if (employeeToRemove != null) {
             employeeList.remove(employeeToRemove);
+            System.out.println("Employee with ID " + id + " removed successfully.");
+        } else {
+            System.out.println("Employee with ID " + id + " not found.");
         }
     }
 
+    // Method to display all employees
     public void displayEmployees() {
-        for (Employee employee : employeeList) {
-            System.out.println(employee);
+        if (employeeList.isEmpty()) {
+            System.out.println("No employees to display.");
+        } else {
+            for (Employee employee : employeeList) {
+                System.out.println(employee);
+            }
         }
     }
 }
 
+// Main class to demonstrate functionality
 public class Main {
     public static void main(String[] args) {
         PayrollSystem payrollSystem = new PayrollSystem();
-        Fulltime emp1 = new Fulltime("Vikas", 1, 50000);
-        PartTime emp2 = new PartTime("Rahul", 3, 5, 100);
+        Scanner scanner = new Scanner(System.in);
 
-        payrollSystem.addEmployee(emp1);
-        payrollSystem.addEmployee(emp2);
+        while (true) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Add Full-time Employee");
+            System.out.println("2. Add Part-time Employee");
+            System.out.println("3. Remove Employee");
+            System.out.println("4. Display Employees");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
 
-        System.out.println("Employee Details:");
-        payrollSystem.displayEmployees();
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Full-time Employee Name: ");
+                    String fullName = scanner.next();
+                    System.out.print("Enter Employee ID: ");
+                    int fullId = scanner.nextInt();
+                    System.out.print("Enter Monthly Salary: ");
+                    double salary = scanner.nextDouble();
+                    payrollSystem.addEmployee(new Fulltime(fullName, fullId, salary));
+                    System.out.println("Full-time Employee added successfully!");
+                    break;
 
-        payrollSystem.removeEmployee(1);
+                case 2:
+                    System.out.print("Enter Part-time Employee Name: ");
+                    String partName = scanner.next();
+                    System.out.print("Enter Employee ID: ");
+                    int partId = scanner.nextInt();
+                    System.out.print("Enter Hours Worked: ");
+                    int hours = scanner.nextInt();
+                    System.out.print("Enter Hourly Rate: ");
+                    double rate = scanner.nextDouble();
+                    payrollSystem.addEmployee(new PartTime(partName, partId, hours, rate));
+                    System.out.println("Part-time Employee added successfully!");
+                    break;
 
-        System.out.println("Employee Details after removal:");
-        payrollSystem.displayEmployees();
+                case 3:
+                    System.out.print("Enter Employee ID to Remove: ");
+                    int removeId = scanner.nextInt();
+                    payrollSystem.removeEmployee(removeId);
+                    break;
+
+                case 4:
+                    System.out.println("Employee Details:");
+                    payrollSystem.displayEmployees();
+                    break;
+
+                case 5:
+                    System.out.println("Exiting the system. Goodbye!");
+                    scanner.close();
+                    System.exit(0);
+
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
     }
 }
